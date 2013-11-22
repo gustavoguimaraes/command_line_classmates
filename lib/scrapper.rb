@@ -12,19 +12,53 @@ class Scrapper
 		@html = Nokogiri::HTML(download)
 	end
 
+	# method get_students_names without the .gsub! (bang)
+	# def get_students_names
+	# 	array1 = []
+	# 	array2 = []
+	# 	#Nokogiri has a method called search that looks for CSS selectors.
+	# 	names = html.search("h3")
+	# 	names.each do | i |
+	# 		temp = i.to_s
+	# 		array1 << temp
+	# 	end
+	# 	array1.each do |elem|
+	# 		temp = elem.gsub("<h3>", "   ").gsub("</h3>", "  ")
+	# 			array2 << temp
+	# 	end
+	# 	array2
+	# end
+
+	#method get_studets_names with gsub!
 	def get_students_names
+		array = []
 		#Nokogiri has a method called search that looks for CSS selectors.
-		html.search("h3").text
+		names = html.search("h3")
+		names.each do | i |
+			temp = i.to_s
+			array << temp
+		end
+		array.each do |elem|
+			elem.gsub!("<h3>", "   ").gsub!("</h3>", "  ")
+		end
+		array
 	end
 
+	# The code below was refactored but the lessons I learned are:("a.blog") is the anchor html tag <a> is assigned to a CSS class called "blog"; 
+			#[i] relates to the element of the array(note: the .search method in NOKOGIRI creates an array)
+			#["href"] tells the search method the name of the HTML tag to retrieve the info from 
+			#blogs << html.search("a.blog")[i]["href"] 
+			#.times can only iterate on numbers.
+			# .length give you a number
 	def get_the_blog_url
 		blogs = []
-		19.times do |i|
-		blogs << html.search("a.blog")[i]["href"] 
+		temp = (html.search("a.blog"))
+		temp.each do |i|
+			href = i["href"]
+			blogs << href
+			
 		end
-		blogs
-
-		#html.search("a.blog")[4]["href"]
+		blogs 
 	end
 
 	def get_the_twitter_name
@@ -39,11 +73,10 @@ class Scrapper
 end
 
 end
-
 #gives us an  object -what kind?
-my_scrapper =  Scrapper.new("https://flatironschool-bk.herokuapp.com/")
+#my_scrapper =  Scrapper.new("https://flatironschool-bk.herokuapp.com/")
 #puts my_scrapper.get_students_names
-puts my_scrapper.get_the_blog_url
+#puts my_scrapper.get_the_blog_url
 #puts my_scrapper.get_the_twitter_name
 
 #puts Scrapper.new("https://flatironschool-bk.herokuapp.com/")
