@@ -30,46 +30,59 @@ class Scrapper
 	# end
 
 	#method get_studets_names with gsub!
+
+	## the get_students_names method can be refactored as
+	# def get_the_blog_url
+	# 	html.search("href").collect { |i| i.text}
+	# end 
+
 	def get_students_names
-		array = []
 		#Nokogiri has a method called search that looks for CSS selectors.
 		names = html.search("h3")
-		names.each do | i |
-			temp = i.to_s
-			array << temp
+		names.collect do | i |
+			i.text
 		end
-		array.each do |elem|
-			elem.gsub!("<h3>", "   ").gsub!("</h3>", "  ")
-		end
-		array
 	end
 
-	# The code below was refactored but the lessons I learned are:("a.blog") is the anchor html tag <a> is assigned to a CSS class called "blog"; 
+	# The code below was refactored and the lessons I learned are:("a.blog") is the anchor html tag <a> is assigned to a CSS class called "blog"; 
 			#[i] relates to the element of the array(note: the .search method in NOKOGIRI creates an array)
 			#["href"] tells the search method the name of the HTML tag to retrieve the info from 
 			#blogs << html.search("a.blog")[i]["href"] 
 			#.times can only iterate on numbers.
 			# .length give you a number
+
 	def get_the_blog_url
 		blogs = []
-		temp = (html.search("a.blog"))
-		temp.each do |i|
-			href = i["href"]
-			blogs << href
-			
+		all_blog_names = (html.search(".back"))
+		all_blog_names.each do |i|
+			if i.search(".blog").text == "Blog"
+			blogs << i.search(".blog @href")
+		else
+			blogs << "none"
+		end
 		end
 		blogs 
 	end
 
+	#You can refactor the method get_the_blog_url in this manner:
+	# def get_the_blog_url
+	# 	html.search("a.blog").collect { |anchor| anchor["href"]}
+	# end
+
 	def get_the_twitter_name
-		new_array = []
-		all_twitter_names = @html.search("li a").text.split(" ")
-		all_twitter_names.each do |element|
-				if element[0] == "@"
-					new_array << element
+		#Comment out the created array in order to use the collect method.
+		#new_array = []
+		all_twitter_names = @html.search(".student")
+		all_twitter_names.collect do |element|
+				if element.search(".twitter")[0].nil?
+					#new_array << 
+					"none"
+					else element.search(".twitter @href")
+					#new_array <<
+					 element.search(".twitter @href")
 				end
 		end
-	new_array
+	#new_array
 end
 
 end

@@ -9,7 +9,7 @@ describe "Student #initialize" do
 
 	end
 	
-	it "should return the name of a new student" do 
+	it "should return the twitter of a new student" do 
 		expect(new_student.twitter).to eq("twitter")
 
 	end
